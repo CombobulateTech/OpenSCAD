@@ -29,6 +29,9 @@ side_width = 52;
 side_height = 44;
 side_thickness = 4;
 side_switch_thickness = 8;
+side_low_height = side_height - side_thickness;
+//side_low_width = side_width - (side_thickness * 3);
+side_low_width = side_width - 10;
 
 // Define all groove dimensions
 groove_length = side_length;
@@ -42,8 +45,12 @@ tongue_width = groove_width;
 tongue_height = groove_height;
 tongue_thickness = groove_thickness + 0.04;
 tongue_switch_thickness = groove_thickness;
+tongue_low_height = side_low_height - 2;
 
 // ######## Coordinates ########
+
+
+//######## Short Side 1 ########
 
 
 // Short side 1 coordinates
@@ -71,11 +78,29 @@ short_s1_g4_horiz_x = short_s1_x + groove_thickness;
 short_s1_g4_horiz_y = short_s1_y + groove_thickness;
 short_s1_g4_horiz_z = short_s1_z + groove_thickness;
 
+//######## Short Side 2 ########
+
+
+// Short side 2 (low) coordinates
+short_s2_x = short_s1_x + side_length - 1;
+short_s2_y = short_s1_y + 5;
+short_s2_z = short_s1_z;
+
+// Short side 2 vertical tongue 1
+short_s2_t1_vert_x = short_s2_x + (groove_thickness / 2);
+short_s2_t1_vert_y = short_s2_y - groove_thickness;
+short_s2_t1_vert_z = short_s2_z + groove_thickness;
+
+// Short side 2 vertical tongue 2
+short_s2_t2_vert_x = short_s2_x + (groove_thickness / 2);
+short_s2_t2_vert_y = short_s2_y + side_low_width;
+short_s2_t2_vert_z = short_s2_z + groove_thickness;
+
 //######## Long Side 1 ########
 
 // Long side 1 coordinates
-long_s1_x = short_s1_x + 6;
-long_s1_y = short_s1_y - 6;
+long_s1_x = short_s1_x + 4;
+long_s1_y = short_s1_y + 1;
 long_s1_z = short_s1_z;
 
 // Long side 1 vertical tongue 1
@@ -102,8 +127,8 @@ long_s1_g3_horiz_z = long_s1_z + groove_thickness;
 //######## Long Side 2 ########
 
 // Long side 2 coordinates
-long_s2_x = short_s1_x + 6;
-long_s2_y = side_width + 6;
+long_s2_x = short_s1_x + 4;
+long_s2_y = side_width - 5;
 long_s2_z = short_s1_z;
 
 // Long side 2 vertical tongue 1
@@ -115,6 +140,16 @@ long_s2_t1_vert_z = long_s2_z + groove_thickness;
 long_s2_g1_vert_x = (long_s2_x + side_length) - (groove_thickness * 2);
 long_s2_g1_vert_y = long_s2_y;
 long_s2_g1_vert_z = long_s2_z + groove_thickness;
+
+// Long side 2 horizontal groove 2
+long_s2_g2_horiz_x = long_s2_x;
+long_s2_g2_horiz_y = long_s2_y;
+long_s2_g2_horiz_z = side_height - (groove_thickness * 2);
+
+// Long side 2 horizontal groove 3
+long_s2_g3_horiz_x = long_s2_x;
+long_s2_g3_horiz_y = long_s2_y;
+long_s2_g3_horiz_z = long_s2_z + groove_thickness;
 
 // ######## Box Misc ########
 
@@ -161,6 +196,30 @@ difference() {
     translate([short_s1_g4_horiz_x, short_s1_g4_horiz_y, short_s1_g4_horiz_z]) {
         color([0.9, 0.5, 0.5, 0.8])
         cube([groove_length, groove_width, groove_thickness], center=false);
+    }
+}
+
+// ######## Short Side 2 (low side) ########
+
+
+// Join the tongue to the short side
+union() {
+    // Create short side 2 vertical tongue 1
+    translate([short_s2_t1_vert_x, short_s2_t1_vert_y, short_s2_t1_vert_z]) {
+        color([0.9, 0.5, 0.5, 0.8])
+        cube([tongue_thickness, tongue_thickness, tongue_low_height], center=false);
+    }
+
+    // Create short side 2 vertical tongue 2
+    translate([short_s2_t2_vert_x, short_s2_t2_vert_y, short_s2_t2_vert_z]) {
+        color([0.9, 0.5, 0.5, 0.8])
+        cube([tongue_thickness, tongue_thickness, tongue_low_height], center=false);
+    }
+
+    // Create short side 2 of the box
+    translate([short_s2_x, short_s2_y, short_s2_z]) {
+        color([0.5, 0.5, 0.5, 0.8])
+        cube([side_thickness, side_low_width, side_low_height], center=false);
     }
 }
 
@@ -226,6 +285,18 @@ union() {
         translate([long_s2_g1_vert_x, long_s2_g1_vert_y, long_s2_g1_vert_z]) {
             color([0.9, 0.5, 0.5, 0.8])
             cube([groove_thickness, groove_thickness, groove_height], center=false);
+        }
+        
+        // Create long side 2 horizontal groove 2
+        translate([long_s2_g2_horiz_x, long_s2_g2_horiz_y, long_s2_g2_horiz_z]) {
+            color([0.9, 0.5, 0.5, 0.8])
+            cube([groove_length, groove_thickness, groove_thickness], center=false);
+        }
+
+        // Create long side 1 horizontal groove 3
+        translate([long_s2_g3_horiz_x, long_s2_g3_horiz_y, long_s2_g3_horiz_z]) {
+            color([0.9, 0.5, 0.5, 0.8])
+            cube([groove_length, groove_thickness, groove_thickness], center=false);
         }
     }
 }
